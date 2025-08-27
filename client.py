@@ -5,6 +5,8 @@ import json
 from threading import Thread
 
 # ---ПУГАМЕ НАЛАШТУВАННЯ ---
+
+mixer.init()
 WIDTH, HEIGHT = 800, 600
 init()
 screen = display.set_mode((WIDTH, HEIGHT))
@@ -44,8 +46,9 @@ font_main = font.Font(None, 36)
 # --- ЗОБРАЖЕННЯ ----
 ball_img = transform.scale(image.load("ball.png"), (20, 20))
 paddle_img = transform.scale(image.load("G03.jpg"), (20, 100))
+bg_img = transform.scale(image.load("bg.jpg"), (800, 600))
 # --- ЗВУКИ ---
-
+wall_bounce = mixer.Sound("SoundBounce.wav")
 # --- ГРА ---
 game_over = False
 winner = None
@@ -90,7 +93,8 @@ while True:
         continue  # Блокує гру після перемоги
 
     if game_state:
-        screen.fill((30, 30, 30))
+        #screen.fill((30, 30, 30))
+        screen.blit(bg_img, (0, 0))
         screen.blit(paddle_img, (20, game_state['paddles']['0']))
         screen.blit(paddle_img, (WIDTH - 40, game_state['paddles']['1']))
         screen.blit(ball_img, (game_state['ball']['x'] - 10, game_state['ball']['y'] - 10))
@@ -100,7 +104,7 @@ while True:
         if game_state['sound_event']:
             if game_state['sound_event'] == 'wall_hit':
                 # звук відбиття м'ячика від стін
-                pass
+                wall_bounce.play()  
             if game_state['sound_event'] == 'platform_hit':
                 # звук відбиття м'ячика від платформи
                 pass
